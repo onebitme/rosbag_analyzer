@@ -22,7 +22,7 @@ def on_deleted_rb(event):
 
 def on_modified_rb(event):
     path = event.src_path
-    print("Starting reading ")
+    print("Starting reading something ")
     bag = rosbag.Bag(path)
     print(bag.get_type_and_topic_info()[1])
     for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
@@ -30,12 +30,12 @@ def on_modified_rb(event):
 
 def on_moved_rb(event):
     path = event.src_path
-    print("Starting reading ")
+    print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
     bag = rosbag.Bag(path)
     print(bag.get_type_and_topic_info()[1])
     for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
         print(msg.PosnLgt)
-    print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
+
 
 def on_modified_json(event):
     path = event.src_path
