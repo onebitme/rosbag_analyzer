@@ -7,68 +7,81 @@ from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler, PatternMatchingEventHandler, FileSystemEventHandler
 
 
-def on_created(event):
-    path = str(event.src_path)
+def on_created_rb(event):
+    path = event.src_path
+    print("Starting reading ")
     bag = rosbag.Bag(path)
     print(bag.get_type_and_topic_info()[1])
     for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
         print(msg.PosnLgt)
-    print("Osman_event_happens_only_once????")
-    #if ".bag" in str(event.src_path):
-    #    print("osmanlandınız")
-    #print(f"hey, {event.src_path} has been created!")
+    print(f"hey, {event.src_path} has been created!")
 
-def on_deleted(event):
+def on_deleted_rb(event):
+    path = event.src_path
+    print(f"{event.src_path} is deleted!")
+
+def on_modified_rb(event):
+    path = event.src_path
+    print("Starting reading ")
+    bag = rosbag.Bag(path)
+    print(bag.get_type_and_topic_info()[1])
+    for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
+        print(msg.PosnLgt)
+
+def on_moved_rb(event):
+    path = event.src_path
+    print("Starting reading ")
+    bag = rosbag.Bag(path)
+    print(bag.get_type_and_topic_info()[1])
+    for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
+        print(msg.PosnLgt)
+    print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
+
+def on_modified_json(event):
     path = event.src_path
     print(path)
-    #print(f"what the f**k! Someone deleted {event.src_path}!")
 
-def on_modified(event):
+def on_moved_json(event):
     path = event.src_path
-    print("shit happens during copy paste")
-    bag = rosbag.Bag(path)
-    print(bag.get_type_and_topic_info()[1])
-    for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
-        print(msg.PosnLgt)
-    #print(f"hey buddy, {event.src_path} has been modified")
-
-def on_moved(event):
-    path = event.src_path
-    print("Osman")
-    #print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
+    print(path)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    #path = sys.argv[1] if len(sys.argv) > 1 else '.'
-    path = "/home/esozen1/Simulativ_Serviced/sim_result_rosbags"
-    #event_handler = LoggingEventHandler()
 
-    patterns = ["*.bag"]
     ignore_patterns = ["*.tmp"]
     ignore_directories = True
     case_sensitive = True
-    
-    #file_system_eHandler = FileSystemEventHandler()
 
-    #file_system_eHandler.on_created = on_created
-    #file_system_eHandler.on_modified = on_modified
+    path_rosbag = "/home/esozen1/Simulativ_Serviced/sim_result_rosbags"
+    path_json = "/home/esozen1/Simulativ_Serviced/sim_result_jsons"
     
+    pattern_rb = ["*.bag"]
+    pattern_json = ["*.txt"]
     
-    custom_event_handler = PatternMatchingEventHandler(patterns,ignore_patterns=ignore_patterns, ignore_directories = True)
-    
-    custom_event_handler.on_created = on_created
-    custom_event_handler.on_deleted = on_deleted
-    custom_event_handler.on_modified = on_modified
-    custom_event_handler.on_moved = on_moved
+    custom_event_handler_rb = PatternMatchingEventHandler(pattern_rb, ignore_patterns, ignore_directories = True)
 
-    observer = Observer()
-    observer.schedule(custom_event_handler, path, recursive=False)
-    observer.start()
+    custom_event_handler_rb.on_created = on_created_rb
+    custom_event_handler_rb.on_deleted = on_deleted_rb
+    custom_event_handler_rb.on_modified = on_modified_rb
+    custom_event_handler_rb.on_moved = on_moved_rb
+
+    custom_event_handler_json = PatternMatchingEventHandler(pattern_json, ignore_patterns, ignore_directories = True)
+
+    custom_event_handler_json.on_modified = on_modified_json
+    custom_event_handler_json.on_moved = on_moved_json
+
+    observer1 = Observer()
+    observer2 = Observer()
+    observer1.schedule(custom_event_handler_rb, path_rosbag, recursive=False)
+    observer2.schedule(custom_event_handler_json, path_json, recursive=False)
+    observer1.start()
+    observer2.start()
 
     try:
         while True:
-            time.sleep(10)
+            time.sleep(1)
     except KeyboardInterrupt:
-        observer.stop()
+        observer1.stop()
+        observer2.stop()
