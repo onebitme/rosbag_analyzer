@@ -1,4 +1,4 @@
-import sys
+import sys, os
 import time
 import logging
 import rosbag
@@ -8,12 +8,18 @@ from watchdog.events import LoggingEventHandler, PatternMatchingEventHandler, Fi
 
 
 def on_created_rb(event):
-    path = event.src_path
+    path_rosbag = event.src_path
     print("Starting reading ")
-    bag = rosbag.Bag(path)
+    #if metadata exists:
+    if os.path.isfile('./metadata_json.txt'):
+        print("Metadata file exists")
+        if str(path_rosbag).__contains__('UC'):
+            print("Osman found UC")
+        #if corresponding json exists
+    bag = rosbag.Bag(path_rosbag)
     print(bag.get_type_and_topic_info()[1])
-    for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
-        print(msg.PosnLgt)
+    #for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
+    #    print(msg.PosnLgt)
     print(f"hey, {event.src_path} has been created!")
 
 def on_deleted_rb(event):
@@ -36,6 +42,13 @@ def on_moved_rb(event):
     for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
         print(msg.PosnLgt)
 
+def on_created_json(event):
+    path = event.src_path
+    print(path)
+
+def on_deleted_json(event):
+    path = event.src_path
+    print(f"{event.src_path} is deleted!")
 
 def on_modified_json(event):
     path = event.src_path
@@ -53,7 +66,7 @@ if __name__ == "__main__":
     ignore_patterns = ["*.tmp"]
     ignore_directories = True
     case_sensitive = True
-
+    #Every sim ouput to put here: 01.232.4.5. 
     path_rosbag = "/home/esozen1/Simulativ_Serviced/sim_result_rosbags"
     path_json = "/home/esozen1/Simulativ_Serviced/sim_result_jsons"
     
@@ -71,6 +84,8 @@ if __name__ == "__main__":
 
     custom_event_handler_json.on_modified = on_modified_json
     custom_event_handler_json.on_moved = on_moved_json
+    custom_event_handler_json.on_deleted = on_deleted_json
+    custom_event_handler_json.on_created = on_created_json
 
     observer1 = Observer()
     observer2 = Observer()
