@@ -1,26 +1,43 @@
 import sys, os
 import time
+import json
 import logging
+from types import DynamicClassAttribute
 import rosbag
 from watchdog import observers
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler, PatternMatchingEventHandler, FileSystemEventHandler
 
+path_rosbag = "/home/esozen1/Simulativ_Serviced/sim_result_rosbags"
+path_json = "/home/esozen1/Simulativ_Serviced/sim_result_jsons"
 
 def on_created_rb(event):
     path_rosbag = event.src_path
-    print("Starting reading ")
-    #if metadata exists:
-    if os.path.isfile('./metadata_json.txt'):
-        print("Metadata file exists")
-        if str(path_rosbag).__contains__('UC'):
-            print("Osman found UC")
-        #if corresponding json exists
-    bag = rosbag.Bag(path_rosbag)
-    print(bag.get_type_and_topic_info()[1])
-    #for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
-    #    print(msg.PosnLgt)
     print(f"hey, {event.src_path} has been created!")
+    if str(path_rosbag).__contains__('UC'):
+        print("ROSBAG Uploaded for a Use Case")
+        print("Checking Metadata File")
+        if os.path.isfile('./metadata_json_v2.json'):
+            print("Metadata file exists, Checking Validation Result")
+            meta_file = open('metadata_json_v2.json')
+            meta_json = json.load(meta_file)
+            if os.listdir("/home/esozen1/Simulativ_Serviced/sim_result_jsons") == []:
+                print("There are no validation results available in dedicated folder")
+            else:
+                uc = "001"
+                var = "001"
+                validation_file = open("/home/esozen1/Simulativ_Serviced/sim_result_jsons/uc_"+uc+"_var_"+var+"_json.txt")
+                validation_json = json.load(validation_file)
+                print(validation_json['CriticalZone'])
+                for i in meta_json['Use_Cases']:
+                    print(i['UC'])
+                    if str(path_rosbag).__contains__('UC'):
+                        bag = rosbag.Bag(path_rosbag)
+        else:
+            print("Metadata File is not available to report sim results")
+    else:
+        print("Uploaded ROSBAG is not valid in terms of naming")
+
 
 def on_deleted_rb(event):
     path = event.src_path
@@ -67,8 +84,7 @@ if __name__ == "__main__":
     ignore_directories = True
     case_sensitive = True
     #Every sim ouput to put here: 01.232.4.5. 
-    path_rosbag = "/home/esozen1/Simulativ_Serviced/sim_result_rosbags"
-    path_json = "/home/esozen1/Simulativ_Serviced/sim_result_jsons"
+
     
     pattern_rb = ["*.bag"]
     pattern_json = ["*.txt"]
