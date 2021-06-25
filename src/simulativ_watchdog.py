@@ -11,27 +11,58 @@ from watchdog.events import LoggingEventHandler, PatternMatchingEventHandler, Fi
 path_rosbag = "/home/esozen1/Simulativ_Serviced/sim_result_rosbags"
 path_json = "/home/esozen1/Simulativ_Serviced/sim_result_jsons"
 
+def slicer(anypath, sub):
+    index = anypath.find(sub)
+    if index != -1:
+        return anypath[index:]
+    else:
+        raise Exception('Sub String not found!')
+
+def check_uc(anypath):
+    get_uc=slicer(anypath, "UC")
+    what_is_uc = get_uc[2:5]
+    return what_is_uc
+
+def check_ts(anypath):
+    get_bagname_first = slicer(anypath, "UC")
+    get_ts_now = slicer(get_bagname_first, "-")
+    what_is_ts = get_ts_now[3:6]
+    return what_is_ts
+
+def graph_it(type_of_graph, ros_bag_path):
+    a_result_graph = "any"
+    return a_result_graph
+    
+
 def on_created_rb(event):
+    sim_result_graphlist = []
     path_rosbag = event.src_path
     print(f"hey, {event.src_path} has been created!")
     if str(path_rosbag).__contains__('UC'):
         print("ROSBAG Uploaded for a Use Case")
         print("Checking Metadata File")
+        UC = check_uc(path_rosbag)
+        TS = (check_ts(path_rosbag))
         if os.path.isfile('./metadata_json_v2.json'):
             print("Metadata file exists, Checking Validation Result")
             meta_file = open('metadata_json_v2.json')
             meta_json = json.load(meta_file)
+            for i in meta_json['Use_Cases']:
+                if i['UC'] == UC:
+                    metrics = i['Metrics']
+                    for key in metrics:
+                        sim_result_graphlist.append(key)
+            print(sim_result_graphlist)
+
             if os.listdir("/home/esozen1/Simulativ_Serviced/sim_result_jsons") == []:
                 print("There are no validation results available in dedicated folder")
             else:
-                uc = "001"
-                var = "001"
+                uc = UC
+                var = TS
                 validation_file = open("/home/esozen1/Simulativ_Serviced/sim_result_jsons/uc_"+uc+"_var_"+var+"_json.txt")
                 validation_json = json.load(validation_file)
-                print(validation_json['CriticalZone'])
-                for i in meta_json['Use_Cases']:
-                    print(i['UC'])
-                    if str(path_rosbag).__contains__('UC'):
+                #print(validation_json['CriticalZone'])
+                if str(path_rosbag).__contains__('UC'):
                         bag = rosbag.Bag(path_rosbag)
         else:
             print("Metadata File is not available to report sim results")
