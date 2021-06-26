@@ -7,6 +7,8 @@ import rosbag
 from watchdog import observers
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler, PatternMatchingEventHandler, FileSystemEventHandler
+from matplotlib import pyplot as plotter
+
 
 path_rosbag = "/home/esozen1/Simulativ_Serviced/sim_result_rosbags"
 path_json = "/home/esozen1/Simulativ_Serviced/sim_result_jsons"
@@ -30,7 +32,30 @@ def check_ts(anypath):
     return what_is_ts
 
 def graph_it(type_of_graph, ros_bag_path):
-    a_result_graph = "any"
+    bag = rosbag.Bag(ros_bag_path)
+    y_axis_of_graph = []
+    time_axis_of_graph =[]
+    
+    if type_of_graph =="lonlat":
+        print("Fixed Graph: "+ type_of_graph)
+    elif type_of_graph == "spdvar":
+        print("Criteria: " + type_of_graph)
+    elif type_of_graph == "laneov":
+        print("Criteria: " + type_of_graph)
+    elif type_of_graph == "foldst":
+        print("Criteria: " + type_of_graph)
+    elif type_of_graph == "stpdst":
+        print("Criteria: " + type_of_graph)
+    elif type_of_graph == "avdec":
+        print("Criteria: " + type_of_graph)
+    elif type_of_graph == "avacc":
+        print("Criteria: " + type_of_graph)
+    elif type_of_graph == "offego":
+        print("Criteria: " + type_of_graph)
+    elif type_of_graph == "offstr":
+        print("Criteria: " + type_of_graph)        
+    elif type_of_graph == "lanech":
+        print("Criteria: " + type_of_graph)
     return a_result_graph
     
 
