@@ -49,9 +49,16 @@ def graph_it(type_of_graph, ros_bag_path):
     save_graph_here = make_folder("001","001",date_time=x.strftime("%x"))
     print("Created Folder: " + save_graph_here)
     bag = rosbag.Bag(ros_bag_path)
+    #print(bag.get_type_and_topic_info()[1])
     y_axis_of_graph = []
     time_axis_of_graph =[]
-    if type_of_graph =="lonlat":
+    for topic,msg,t  in bag.read_messages(topics=['/obj_assmnt_frn']):
+        if len(msg.objects)>0:
+            for i in range(len(msg.objects)):
+                print(msg.objects[i])
+
+
+    """if type_of_graph =="lonlat":
         for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
             y_axis_of_graph.append(msg.PosnLgt)
             time_axis_of_graph.append(msg.PosnLat)
@@ -79,7 +86,7 @@ def graph_it(type_of_graph, ros_bag_path):
     elif type_of_graph == "offstr":
         print("Criteria: " + type_of_graph)        
     elif type_of_graph == "lanech":
-        print("Criteria: " + type_of_graph)
+        print("Criteria: " + type_of_graph)"""
     
 
 def on_created_rb(event):
