@@ -5,6 +5,7 @@ import time
 import json
 import logging
 import rosbag
+
 from types import DynamicClassAttribute
 from watchdog import observers
 from watchdog.observers import Observer
@@ -44,49 +45,99 @@ def make_folder(uc, var, date_time):
         print("Directory " , dirName ,  " already exists")
     return graph_dir
 
-def graph_it(type_of_graph, ros_bag_path):
+def graph_it(uc, var, type_of_graph, ros_bag_path):
     x = datetime.datetime.now()
-    save_graph_here = make_folder("001","001",date_time=x.strftime("%x"))
+    save_graph_here = make_folder(uc,var,date_time=x.strftime("%x"))
     print("Created Folder: " + save_graph_here)
     bag = rosbag.Bag(ros_bag_path)
     #print(bag.get_type_and_topic_info()[1])
-    y_axis_of_graph = []
-    time_axis_of_graph =[]
-    for topic,msg,t  in bag.read_messages(topics=['/obj_assmnt_frn']):
-        if len(msg.objects)>0:
-            for i in range(len(msg.objects)):
-                print(msg.objects[i])
 
-
-    """if type_of_graph =="lonlat":
-        for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
-            y_axis_of_graph.append(msg.PosnLgt)
-            time_axis_of_graph.append(msg.PosnLat)
-        print("Fixed Graph: "+ type_of_graph)
+    if type_of_graph =="lonlat":
+        y_axis_of_graph = []
+        time_axis_of_graph =[]
+        for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
+            #y_axis_of_graph.append(msg.PosnLgt)
+            #time_axis_of_graph.append(msg.PosnLat)
+            print(msg)
+        #print("Fixed Graph: "+ type_of_graph)
+        #plotter.plot(time_axis_of_graph,y_axis_of_graph)
+        #plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
+    
     elif type_of_graph == "speed_variance":
+        y_axis_of_graph = []
+        time_axis_of_graph =[]
         #Reading messages
-        for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
-            y_axis_of_graph.append(msg.PosnLgt)
-            time_axis_of_graph.append(msg.PosnLat)
+        num_msgs = 1
+        #very stupid code to get the time array
+        #for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
+        #    while num_msgs:
+        #        first_msg = msg.header.stamp.secs
+        #        num_msgs -= 1
+        for topic,msg,t  in bag.read_messages(topics=['/vehicle_status']):
+            y_axis_of_graph.append(msg.speed_variance)
+            
+        time_axis_of_graph = list(range(len(y_axis_of_graph)))
         plotter.plot(time_axis_of_graph,y_axis_of_graph)
         plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
+        plotter.clf()
 
     elif type_of_graph == "lane_overshoot":
+        y_axis_of_graph = []
+        time_axis_of_graph =[]
+        for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
+            #print(msg.lane_overshoot)
+            y_axis_of_graph.append(msg.lane_overshoot)
         print("Criteria: " + type_of_graph)
+        time_axis_of_graph = list(range(len(y_axis_of_graph)))
+        plotter.plot(time_axis_of_graph,y_axis_of_graph)
+        plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
+        plotter.clf()
+    
     elif type_of_graph == "av_deceleration":
+        y_axis_of_graph = []
+        time_axis_of_graph =[]
+        for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
+            y_axis_of_graph.append(msg.av_deceleration)
+        time_axis_of_graph = list(range(len(y_axis_of_graph)))
+        plotter.plot(time_axis_of_graph,y_axis_of_graph)
+        plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
+        plotter.clf()
         print("Criteria: " + type_of_graph)
+    
     elif type_of_graph == "following_distance":
+        y_axis_of_graph = []
+        time_axis_of_graph =[]
+        traffic_objects = {}
+        #TODO: I Need Help Here!!
+        for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
+            y_axis_of_graph.append(msg.following_distance)
+        
+        
+        time_axis_of_graph = list(range(len(y_axis_of_graph)))
+        plotter.plot(time_axis_of_graph,y_axis_of_graph)
+        plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
+        plotter.clf()
         print("Criteria: " + type_of_graph)
+    
+    
     elif type_of_graph == "stpdst":
         print("Criteria: " + type_of_graph)
+    
+    
     elif type_of_graph == "avacc":
         print("Criteria: " + type_of_graph)
+    
+    
     elif type_of_graph == "offego":
         print("Criteria: " + type_of_graph)
+    
+    
     elif type_of_graph == "offstr":
         print("Criteria: " + type_of_graph)        
+    
+    
     elif type_of_graph == "lanech":
-        print("Criteria: " + type_of_graph)"""
+        print("Criteria: " + type_of_graph)
     
 
 def on_created_rb(event):
@@ -97,7 +148,7 @@ def on_created_rb(event):
         print("ROSBAG Uploaded for a Use Case")
         print("Checking Metadata File")
         UC = check_uc(path_rosbag)
-        TS = (check_ts(path_rosbag))
+        TS = check_ts(path_rosbag)
         if os.path.isfile('./metadata_json_v2.json'):
             print("Metadata file exists, Checking Validation Result")
             meta_file = open('metadata_json_v2.json')
@@ -107,16 +158,18 @@ def on_created_rb(event):
                     metrics = i['Metrics']
                     for key in metrics:
                         sim_result_graphlist.append(key)
+                else:
+                    print("UC not Found in Metadata")
             for key in sim_result_graphlist:
-                graph_it(key,path_rosbag)
+                graph_it(UC, TS, key,path_rosbag)
 
             if os.listdir("/home/esozen1/Simulativ_Serviced/sim_result_jsons") == []:
                 print("There are no validation results available in dedicated folder")
             else:
                 uc = UC
                 var = TS
-                validation_file = open("/home/esozen1/Simulativ_Serviced/sim_result_jsons/uc_"+uc+"_var_"+var+"_json.txt")
-                validation_json = json.load(validation_file)
+                #validation_file = open("/home/esozen1/Simulativ_Serviced/sim_result_jsons/uc_"+uc+"_var_"+var+"_json.txt")
+                #validation_json = json.load(validation_file)
                 #print(validation_json['CriticalZone'])
                 if str(path_rosbag).__contains__('UC'):
                         bag = rosbag.Bag(path_rosbag)
