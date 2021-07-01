@@ -140,13 +140,15 @@ def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
         exceed_values = []
         for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
             y_axis_of_graph.append(msg.following_distance)
-        
-        for i in range(len(y_axis_of_graph)):
-            val_check = y_axis_of_graph[i]
+            print("Following distance: " + str(msg.following_distance) + "  vs  " + str(msg.distance_to_vehicle))
+            exceed_values.append(msg.distance_to_vehicle)
+
+        for i in range(len(exceed_values)):
+            val_check = exceed_values[i]
             if val_check < limit_of_metric:
-                exceed_values.append(y_axis_of_graph[i])
+                exceed_values[i] = y_axis_of_graph[i]
             else:
-                exceed_values.append(np.nan)
+                exceed_values[i] = np.nan
             
         time_axis_of_graph = list(range(len(y_axis_of_graph)))
         plotter.plot(time_axis_of_graph,y_axis_of_graph, label=type_of_graph)
