@@ -45,7 +45,13 @@ def make_folder(uc, var, date_time):
         print("Directory " , dirName ,  " already exists")
     return graph_dir
 
-def graph_it(uc, var, type_of_graph, ros_bag_path):
+
+def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
+    #TODO: No Time Messages in '/validation_metrics' tab
+    #TODO: implement value check
+    print(limit_of_metric)
+    if limit_of_metric == "":
+        limit_of_metric = 0
     x = datetime.datetime.now()
     save_graph_here = make_folder(uc,var,date_time=x.strftime("%x"))
     print("Created Folder: " + save_graph_here)
@@ -65,56 +71,82 @@ def graph_it(uc, var, type_of_graph, ros_bag_path):
     
     elif type_of_graph == "speed_variance":
         y_axis_of_graph = []
+        exceed_values = [0,]
         time_axis_of_graph =[]
         #Reading messages
-        num_msgs = 1
-        #very stupid code to get the time array
-        #for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
-        #    while num_msgs:
-        #        first_msg = msg.header.stamp.secs
-        #        num_msgs -= 1
-        for topic,msg,t  in bag.read_messages(topics=['/vehicle_status']):
+        for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
             y_axis_of_graph.append(msg.speed_variance)
+        
+        for i in range(len(y_axis_of_graph)-1):
+            val_check = y_axis_of_graph[i+1]- y_axis_of_graph[i]
+            if val_check > limit_of_metric:
+                exceed_values.append(y_axis_of_graph[i+1])
+            else:
+                exceed_values.append(0)
             
         time_axis_of_graph = list(range(len(y_axis_of_graph)))
-        plotter.plot(time_axis_of_graph,y_axis_of_graph)
+        plotter.plot(time_axis_of_graph,y_axis_of_graph, label=type_of_graph)
+        plotter.plot(time_axis_of_graph, exceed_values, label="exceeding "+ type_of_graph)
         plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
         plotter.clf()
 
     elif type_of_graph == "lane_overshoot":
         y_axis_of_graph = []
         time_axis_of_graph =[]
+        exceed_values = [0,]
         for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
-            #print(msg.lane_overshoot)
             y_axis_of_graph.append(msg.lane_overshoot)
-        print("Criteria: " + type_of_graph)
+        
+        for i in range(len(y_axis_of_graph)-1):
+            val_check = y_axis_of_graph[i+1]- y_axis_of_graph[i]
+            if val_check > limit_of_metric:
+                exceed_values.append(y_axis_of_graph[i+1])
+            else:
+                exceed_values.append(0)
+            
         time_axis_of_graph = list(range(len(y_axis_of_graph)))
-        plotter.plot(time_axis_of_graph,y_axis_of_graph)
+        plotter.plot(time_axis_of_graph,y_axis_of_graph, label=type_of_graph)
+        plotter.plot(time_axis_of_graph, exceed_values, label="exceeding "+ type_of_graph)
         plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
         plotter.clf()
     
     elif type_of_graph == "av_deceleration":
         y_axis_of_graph = []
         time_axis_of_graph =[]
+        exceed_values = [0,]
         for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
             y_axis_of_graph.append(msg.av_deceleration)
+        
+        for i in range(len(y_axis_of_graph)-1):
+            val_check = y_axis_of_graph[i+1]- y_axis_of_graph[i]
+            if val_check > limit_of_metric:
+                exceed_values.append(y_axis_of_graph[i+1])
+            else:
+                exceed_values.append(0)
+            
         time_axis_of_graph = list(range(len(y_axis_of_graph)))
-        plotter.plot(time_axis_of_graph,y_axis_of_graph)
+        plotter.plot(time_axis_of_graph,y_axis_of_graph, label=type_of_graph)
+        plotter.plot(time_axis_of_graph, exceed_values, label="exceeding "+ type_of_graph)
         plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
         plotter.clf()
-        print("Criteria: " + type_of_graph)
     
     elif type_of_graph == "following_distance":
         y_axis_of_graph = []
         time_axis_of_graph =[]
-        traffic_objects = {}
-        #TODO: I Need Help Here!!
+        exceed_values = [0,]
         for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
             y_axis_of_graph.append(msg.following_distance)
         
-        
+        for i in range(len(y_axis_of_graph)-1):
+            val_check = y_axis_of_graph[i+1]- y_axis_of_graph[i]
+            if val_check > limit_of_metric:
+                exceed_values.append(y_axis_of_graph[i+1])
+            else:
+                exceed_values.append(0)
+            
         time_axis_of_graph = list(range(len(y_axis_of_graph)))
-        plotter.plot(time_axis_of_graph,y_axis_of_graph)
+        plotter.plot(time_axis_of_graph,y_axis_of_graph, label=type_of_graph)
+        plotter.plot(time_axis_of_graph, exceed_values, label="exceeding "+ type_of_graph)
         plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
         plotter.clf()
         print("Criteria: " + type_of_graph)
@@ -142,6 +174,7 @@ def graph_it(uc, var, type_of_graph, ros_bag_path):
 
 def on_created_rb(event):
     sim_result_graphlist = []
+    sim_result_metric_values = []
     path_rosbag = event.src_path
     print(f"hey, {event.src_path} has been created!")
     if str(path_rosbag).__contains__('UC'):
@@ -156,12 +189,14 @@ def on_created_rb(event):
             for i in meta_json['Use_Cases']:
                 if i['UC'] == UC:
                     metrics = i['Metrics']
-                    for key in metrics:
-                        sim_result_graphlist.append(key)
+                    for item in metrics.items():
+                        print(str(item))
+                        sim_result_graphlist.append(item)
+                        #sim_result_metric_values.append(value)
                 else:
                     print("UC not Found in Metadata")
-            for key in sim_result_graphlist:
-                graph_it(UC, TS, key,path_rosbag)
+            for key, value in sim_result_graphlist:
+                graph_it(UC, TS, key, value ,path_rosbag)
 
             if os.listdir("/home/esozen1/Simulativ_Serviced/sim_result_jsons") == []:
                 print("There are no validation results available in dedicated folder")
