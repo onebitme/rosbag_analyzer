@@ -5,6 +5,7 @@ import time
 import json
 import logging
 import rosbag
+import numpy as np
 
 from types import DynamicClassAttribute
 from watchdog import observers
@@ -71,82 +72,86 @@ def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
     
     elif type_of_graph == "speed_variance":
         y_axis_of_graph = []
-        exceed_values = [0,]
+        exceed_values = []
         time_axis_of_graph =[]
         #Reading messages
         for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
             y_axis_of_graph.append(msg.speed_variance)
         
-        for i in range(len(y_axis_of_graph)-1):
-            val_check = y_axis_of_graph[i+1]- y_axis_of_graph[i]
+        for i in range(len(y_axis_of_graph)):
+            val_check = y_axis_of_graph[i]
             if val_check > limit_of_metric:
-                exceed_values.append(y_axis_of_graph[i+1])
+                exceed_values.append(y_axis_of_graph[i])
             else:
-                exceed_values.append(0)
+                exceed_values.append(np.nan)
             
         time_axis_of_graph = list(range(len(y_axis_of_graph)))
         plotter.plot(time_axis_of_graph,y_axis_of_graph, label=type_of_graph)
         plotter.plot(time_axis_of_graph, exceed_values, label="exceeding "+ type_of_graph)
+        plotter.legend()
         plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
         plotter.clf()
 
     elif type_of_graph == "lane_overshoot":
         y_axis_of_graph = []
         time_axis_of_graph =[]
-        exceed_values = [0,]
+        exceed_values = []
         for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
             y_axis_of_graph.append(msg.lane_overshoot)
         
-        for i in range(len(y_axis_of_graph)-1):
-            val_check = y_axis_of_graph[i+1]- y_axis_of_graph[i]
-            if val_check > limit_of_metric:
-                exceed_values.append(y_axis_of_graph[i+1])
+        for i in range(len(y_axis_of_graph)):
+            val_check = y_axis_of_graph[i]
+            if abs(val_check) > limit_of_metric:
+                exceed_values.append(y_axis_of_graph[i])
             else:
-                exceed_values.append(0)
+                exceed_values.append(np.nan)
             
         time_axis_of_graph = list(range(len(y_axis_of_graph)))
         plotter.plot(time_axis_of_graph,y_axis_of_graph, label=type_of_graph)
         plotter.plot(time_axis_of_graph, exceed_values, label="exceeding "+ type_of_graph)
+        plotter.legend()
         plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
         plotter.clf()
     
     elif type_of_graph == "av_deceleration":
         y_axis_of_graph = []
         time_axis_of_graph =[]
-        exceed_values = [0,]
+        exceed_values = []
         for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
             y_axis_of_graph.append(msg.av_deceleration)
         
-        for i in range(len(y_axis_of_graph)-1):
-            val_check = y_axis_of_graph[i+1]- y_axis_of_graph[i]
-            if val_check > limit_of_metric:
-                exceed_values.append(y_axis_of_graph[i+1])
+        for i in range(len(y_axis_of_graph)):
+            val_check = y_axis_of_graph[i]
+            if abs(val_check) > limit_of_metric:
+                exceed_values.append(y_axis_of_graph[i])
             else:
-                exceed_values.append(0)
+                exceed_values.append(np.nan)
             
         time_axis_of_graph = list(range(len(y_axis_of_graph)))
         plotter.plot(time_axis_of_graph,y_axis_of_graph, label=type_of_graph)
-        plotter.plot(time_axis_of_graph, exceed_values, label="exceeding "+ type_of_graph)
+        plotter.plot(time_axis_of_graph, exceed_values, 'ro', label="exceeding "+ type_of_graph)
+        plotter.legend()
         plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
         plotter.clf()
     
     elif type_of_graph == "following_distance":
         y_axis_of_graph = []
         time_axis_of_graph =[]
-        exceed_values = [0,]
+        exceed_values = []
         for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
             y_axis_of_graph.append(msg.following_distance)
         
-        for i in range(len(y_axis_of_graph)-1):
-            val_check = y_axis_of_graph[i+1]- y_axis_of_graph[i]
-            if val_check > limit_of_metric:
-                exceed_values.append(y_axis_of_graph[i+1])
+        for i in range(len(y_axis_of_graph)):
+            val_check = y_axis_of_graph[i]
+            if val_check < limit_of_metric:
+                exceed_values.append(y_axis_of_graph[i])
             else:
-                exceed_values.append(0)
+                exceed_values.append(np.nan)
             
         time_axis_of_graph = list(range(len(y_axis_of_graph)))
         plotter.plot(time_axis_of_graph,y_axis_of_graph, label=type_of_graph)
-        plotter.plot(time_axis_of_graph, exceed_values, label="exceeding "+ type_of_graph)
+        plotter.plot(time_axis_of_graph, exceed_values,'ro', label="exceeding "+ type_of_graph)
+        plotter.legend()
         plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
         plotter.clf()
         print("Criteria: " + type_of_graph)
