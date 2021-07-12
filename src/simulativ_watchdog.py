@@ -11,6 +11,9 @@ from types import DynamicClassAttribute
 from watchdog import observers
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler, PatternMatchingEventHandler, FileSystemEventHandler
+
+import matplotlib
+matplotlib.use('Agg')
 from matplotlib import pyplot as plotter
 
 
@@ -180,6 +183,15 @@ def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
     
 
 def on_created_rb(event):
+    path_rosbag = event.src_path
+    print(path_rosbag)
+"""   historicalSize = -1
+    while (historicalSize != os.path.getsize(path_rosbag)):
+        historicalSize = os.path.getsize(path_rosbag)
+        time.sleep(1)
+"""
+    
+"""
     sim_result_graphlist = []
     sim_result_metric_values = []
     path_rosbag = event.src_path
@@ -219,6 +231,7 @@ def on_created_rb(event):
             print("Metadata File is not available to report sim results")
     else:
         print("Uploaded ROSBAG is not valid in terms of naming")
+"""
 
 
 def on_deleted_rb(event):
@@ -227,19 +240,59 @@ def on_deleted_rb(event):
 
 def on_modified_rb(event):
     path = event.src_path
-    print("Starting reading something ")
-    bag = rosbag.Bag(path)
-    print(bag.get_type_and_topic_info()[1])
-    for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
-        print(msg.PosnLgt)
+    historicalSize = -1
+    while (historicalSize != os.path.getsize(path)):
+        historicalSize = os.path.getsize(path)
+        print("we are in the loop")
+        time.sleep(10)
+    
+    sim_result_graphlist = []
+    sim_result_metric_values = []
+    path_rosbag = event.src_path
+    print(f"hey, {event.src_path} has been created!")
+    if str(path_rosbag).__contains__('UC'):
+        print("ROSBAG Uploaded for a Use Case")
+        print("Checking Metadata File")
+        UC = check_uc(path_rosbag)
+        TS = check_ts(path_rosbag)
+        if os.path.isfile('./metadata_json_v2.json'):
+            print("Metadata file exists, Checking Validation Result")
+            meta_file = open('metadata_json_v2.json')
+            meta_json = json.load(meta_file)
+            for i in meta_json['Use_Cases']:
+                if i['UC'] == UC:
+                    metrics = i['Metrics']
+                    for item in metrics.items():
+                        print(str(item))
+                        sim_result_graphlist.append(item)
+                        #sim_result_metric_values.append(value)
+                else:
+                    print("UC not Found in Metadata")
+            for key, value in sim_result_graphlist:
+                graph_it(UC, TS, key, value ,path_rosbag)
+
+            if os.listdir("/home/esozen1/Simulativ_Serviced/sim_result_jsons") == []:
+                print("There are no validation results available in dedicated folder")
+            else:
+                uc = UC
+                var = TS
+                #validation_file = open("/home/esozen1/Simulativ_Serviced/sim_result_jsons/uc_"+uc+"_var_"+var+"_json.txt")
+                #validation_json = json.load(validation_file)
+                #print(validation_json['CriticalZone'])
+                if str(path_rosbag).__contains__('UC'):
+                        bag = rosbag.Bag(path_rosbag)
+        else:
+            print("Metadata File is not available to report sim results")
+    else:
+        print("Uploaded ROSBAG is not valid in terms of naming")
+    print("On Modified RB " + path)
+
 
 def on_moved_rb(event):
     path = event.src_path
     print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
     bag = rosbag.Bag(path)
-    print(bag.get_type_and_topic_info()[1])
-    for topic,msg,t  in bag.read_messages(topics=['/ego_pose']):
-        print(msg.PosnLgt)
+    print("On Moved_RB"+path)
 
 def on_created_json(event):
     path = event.src_path
