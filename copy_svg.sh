@@ -4,7 +4,7 @@ docker ps
 read -p "Weird name of your docker container: " a
 echo $a
 
-docker cp $a:/home/esozen1/Simulativ_Serviced/output_files/ /home/esozen1/Simulativ_Serviced/
+docker cp $a:/home/$USER/Simulativ_Serviced/output_files/ /home/$USER/Simulativ_Serviced/
 #
 
 

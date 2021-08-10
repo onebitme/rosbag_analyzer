@@ -6,7 +6,7 @@ echo $a
 read -p "Weird name of your docker container: " b
 echo $b
 
-docker cp $a/. $b:/home/esozen1/Simulativ_Serviced/sim_result_rosbags/
+docker cp $a/. $b:/home/$USER/Simulativ_Serviced/sim_result_rosbags/
 #
 
 
