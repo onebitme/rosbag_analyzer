@@ -18,7 +18,6 @@ from matplotlib import pyplot as plotter
 
 
 path_rosbag = "/home/esozen1/Simulativ_Serviced/sim_result_rosbags"
-path_json = "/home/esozen1/Simulativ_Serviced/sim_result_jsons"
 
 def slicer(anypath, sub):
     index = anypath.find(sub)
@@ -49,7 +48,6 @@ def make_folder(uc, var, date_time):
         print("Directory " , dirName ,  " already exists")
     return graph_dir
 
-
 def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
     #TODO: No Time Messages in '/validation_metrics' tab
     #TODO: implement value check
@@ -57,7 +55,8 @@ def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
     if limit_of_metric == "":
         limit_of_metric = 0
     x = datetime.datetime.now()
-    save_graph_here = make_folder(uc,var,date_time=x.strftime("%x"))
+    date_time = '{:%d-%m-%Y}'.format(x)
+    save_graph_here = make_folder(uc,var,date_time)
     print("Created Folder: " + save_graph_here)
     bag = rosbag.Bag(ros_bag_path)
     #print(bag.get_type_and_topic_info()[1])
@@ -181,19 +180,15 @@ def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
     elif type_of_graph == "lanech":
         print("Criteria: " + type_of_graph)
     
-
 def on_created_rb(event):
-    path_rosbag = event.src_path
-    print(path_rosbag)
-"""   historicalSize = -1
-    while (historicalSize != os.path.getsize(path_rosbag)):
-        historicalSize = os.path.getsize(path_rosbag)
-        time.sleep(1)
-"""
+    path = event.src_path
+    historicalSize = -1
+    while (historicalSize != os.path.getsize(path)):
+        historicalSize = os.path.getsize(path)
+        print("we are in the loop")
+        time.sleep(10)
     
-"""
     sim_result_graphlist = []
-    sim_result_metric_values = []
     path_rosbag = event.src_path
     print(f"hey, {event.src_path} has been created!")
     if str(path_rosbag).__contains__('UC'):
@@ -201,9 +196,9 @@ def on_created_rb(event):
         print("Checking Metadata File")
         UC = check_uc(path_rosbag)
         TS = check_ts(path_rosbag)
-        if os.path.isfile('./metadata_json_v2.json'):
+        if os.path.isfile('/home/esozen1/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json'):
             print("Metadata file exists, Checking Validation Result")
-            meta_file = open('metadata_json_v2.json')
+            meta_file = open('/home/esozen1/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json')
             meta_json = json.load(meta_file)
             for i in meta_json['Use_Cases']:
                 if i['UC'] == UC:
@@ -217,22 +212,11 @@ def on_created_rb(event):
             for key, value in sim_result_graphlist:
                 graph_it(UC, TS, key, value ,path_rosbag)
 
-            if os.listdir("/home/esozen1/Simulativ_Serviced/sim_result_jsons") == []:
-                print("There are no validation results available in dedicated folder")
-            else:
-                uc = UC
-                var = TS
-                #validation_file = open("/home/esozen1/Simulativ_Serviced/sim_result_jsons/uc_"+uc+"_var_"+var+"_json.txt")
-                #validation_json = json.load(validation_file)
-                #print(validation_json['CriticalZone'])
-                if str(path_rosbag).__contains__('UC'):
-                        bag = rosbag.Bag(path_rosbag)
         else:
             print("Metadata File is not available to report sim results")
     else:
         print("Uploaded ROSBAG is not valid in terms of naming")
-"""
-
+    print("On Modified RB " + path)
 
 def on_deleted_rb(event):
     path = event.src_path
@@ -247,7 +231,6 @@ def on_modified_rb(event):
         time.sleep(10)
     
     sim_result_graphlist = []
-    sim_result_metric_values = []
     path_rosbag = event.src_path
     print(f"hey, {event.src_path} has been created!")
     if str(path_rosbag).__contains__('UC'):
@@ -255,9 +238,9 @@ def on_modified_rb(event):
         print("Checking Metadata File")
         UC = check_uc(path_rosbag)
         TS = check_ts(path_rosbag)
-        if os.path.isfile('./metadata_json_v2.json'):
+        if os.path.isfile('/home/esozen1/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json'):
             print("Metadata file exists, Checking Validation Result")
-            meta_file = open('metadata_json_v2.json')
+            meta_file = open('/home/esozen1/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json')
             meta_json = json.load(meta_file)
             for i in meta_json['Use_Cases']:
                 if i['UC'] == UC:
@@ -271,44 +254,17 @@ def on_modified_rb(event):
             for key, value in sim_result_graphlist:
                 graph_it(UC, TS, key, value ,path_rosbag)
 
-            if os.listdir("/home/esozen1/Simulativ_Serviced/sim_result_jsons") == []:
-                print("There are no validation results available in dedicated folder")
-            else:
-                uc = UC
-                var = TS
-                #validation_file = open("/home/esozen1/Simulativ_Serviced/sim_result_jsons/uc_"+uc+"_var_"+var+"_json.txt")
-                #validation_json = json.load(validation_file)
-                #print(validation_json['CriticalZone'])
-                if str(path_rosbag).__contains__('UC'):
-                        bag = rosbag.Bag(path_rosbag)
         else:
             print("Metadata File is not available to report sim results")
     else:
         print("Uploaded ROSBAG is not valid in terms of naming")
     print("On Modified RB " + path)
 
-
 def on_moved_rb(event):
     path = event.src_path
     print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
     bag = rosbag.Bag(path)
     print("On Moved_RB"+path)
-
-def on_created_json(event):
-    path = event.src_path
-    print(path)
-
-def on_deleted_json(event):
-    path = event.src_path
-    print(f"{event.src_path} is deleted!")
-
-def on_modified_json(event):
-    path = event.src_path
-    print(path)
-
-def on_moved_json(event):
-    path = event.src_path
-    print(path)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
@@ -319,10 +275,9 @@ if __name__ == "__main__":
     ignore_directories = True
     case_sensitive = True
     #Every sim ouput to put here: 01.232.4.5. 
-
     
     pattern_rb = ["*.bag"]
-    pattern_json = ["*.txt"]
+    #pattern_json = ["*.txt"]
     
     custom_event_handler_rb = PatternMatchingEventHandler(pattern_rb, ignore_patterns, ignore_directories = True)
 
@@ -331,17 +286,17 @@ if __name__ == "__main__":
     custom_event_handler_rb.on_modified = on_modified_rb
     custom_event_handler_rb.on_moved = on_moved_rb
 
-    custom_event_handler_json = PatternMatchingEventHandler(pattern_json, ignore_patterns, ignore_directories = True)
+    #custom_event_handler_json = PatternMatchingEventHandler(pattern_json, ignore_patterns, ignore_directories = True)
 
-    custom_event_handler_json.on_modified = on_modified_json
-    custom_event_handler_json.on_moved = on_moved_json
-    custom_event_handler_json.on_deleted = on_deleted_json
-    custom_event_handler_json.on_created = on_created_json
+    #custom_event_handler_json.on_modified = on_modified_json
+    #custom_event_handler_json.on_moved = on_moved_json
+    #custom_event_handler_json.on_deleted = on_deleted_json
+    #custom_event_handler_json.on_created = on_created_json
 
     observer1 = Observer()
     observer2 = Observer()
     observer1.schedule(custom_event_handler_rb, path_rosbag, recursive=False)
-    observer2.schedule(custom_event_handler_json, path_json, recursive=False)
+    #observer2.schedule(custom_event_handler_json, path_json, recursive=False)
     observer1.start()
     observer2.start()
 
@@ -350,4 +305,4 @@ if __name__ == "__main__":
             time.sleep(1)
     except KeyboardInterrupt:
         observer1.stop()
-        observer2.stop()
+        #observer2.stop()
