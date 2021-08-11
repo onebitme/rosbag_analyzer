@@ -1,7 +1,9 @@
-FROM python:3
+FROM python:3.6.9
 
-#COPY /sim_result_rosbags /home/esozen1/Simulativ_Serviced/sim_result_rosbags
+COPY /sim_result_rosbags /home/esozen1/Simulativ_Serviced/sim_result_rosbags
+RUN pip install --upgrade pip
 COPY requirements.txt /
+
 RUN pip install --extra-index-url https://rospypi.github.io/simple/ rospy rosbag
 RUN pip install watchdog
 RUN python3 -m pip install -r requirements.txt
