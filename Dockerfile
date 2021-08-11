@@ -1,6 +1,6 @@
 FROM python:3
 
-COPY /sim_result_rosbags /home/esozen1/Simulativ_Serviced/sim_result_rosbags
+#COPY /sim_result_rosbags /home/esozen1/Simulativ_Serviced/sim_result_rosbags
 COPY requirements.txt /
 RUN pip install --extra-index-url https://rospypi.github.io/simple/ rospy rosbag
 RUN pip install watchdog
