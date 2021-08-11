@@ -7,18 +7,18 @@ import json
 import logging
 import rosbag
 import numpy as np
-
-from types import DynamicClassAttribute
+#from types import DynamicClassAttribute
 from watchdog import observers
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler, PatternMatchingEventHandler, FileSystemEventHandler
 
 import matplotlib
 matplotlib.use('Agg')
-from matplotlib import pyplot as plotter
+from matplotlib import pyplot as plotter, use
 
-USER = getpass.getuser()
-path_rosbag = "/home/"+USER+"/Simulativ_Serviced/sim_result_rosbags"
+username= getpass.getuser()
+username = "esozen1"
+path_rosbag = "/home/"+username+"/Simulativ_Serviced/sim_result_rosbags"
 
 def slicer(anypath, sub):
     index = anypath.find(sub)
@@ -39,7 +39,7 @@ def check_ts(anypath):
     return what_is_ts
 
 def make_folder(uc, var, date_time):
-    parent_dir = "/home/esozen1/Simulativ_Serviced/output_files/"
+    parent_dir = "/home/"+username+"/Simulativ_Serviced/output_files/"
     dirName = uc + var + date_time
     graph_dir = parent_dir + dirName
     try:
@@ -191,15 +191,15 @@ def on_created_rb(event):
     
     sim_result_graphlist = []
     path_rosbag = event.src_path
-    print(f"hey, {event.src_path} has been created!")
+    #print(f"hey, {event.src_path} has been created!")
     if str(path_rosbag).__contains__('UC'):
         print("ROSBAG Uploaded for a Use Case")
         print("Checking Metadata File")
         UC = check_uc(path_rosbag)
         TS = check_ts(path_rosbag)
-        if os.path.isfile('/home/esozen1/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json'):
+        if os.path.isfile("/home/"+username+"/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json"):
             print("Metadata file exists, Checking Validation Result")
-            meta_file = open('/home/esozen1/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json')
+            meta_file = open("/home/"+username+"/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json")
             meta_json = json.load(meta_file)
             for i in meta_json['Use_Cases']:
                 if i['UC'] == UC:
@@ -221,7 +221,7 @@ def on_created_rb(event):
 
 def on_deleted_rb(event):
     path = event.src_path
-    print(f"{event.src_path} is deleted!")
+    #print(f"{event.src_path} is deleted!")
 
 def on_modified_rb(event):
     path = event.src_path
@@ -233,15 +233,15 @@ def on_modified_rb(event):
     
     sim_result_graphlist = []
     path_rosbag = event.src_path
-    print(f"hey, {event.src_path} has been created!")
+    #print(f"hey, {event.src_path} has been created!")
     if str(path_rosbag).__contains__('UC'):
         print("ROSBAG Uploaded for a Use Case")
         print("Checking Metadata File")
         UC = check_uc(path_rosbag)
         TS = check_ts(path_rosbag)
-        if os.path.isfile('/home/esozen1/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json'):
+        if os.path.isfile("/home/"+username+"/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json"):
             print("Metadata file exists, Checking Validation Result")
-            meta_file = open('/home/esozen1/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json')
+            meta_file = open("/home/"+username+"/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json")
             meta_json = json.load(meta_file)
             for i in meta_json['Use_Cases']:
                 if i['UC'] == UC:
@@ -263,7 +263,7 @@ def on_modified_rb(event):
 
 def on_moved_rb(event):
     path = event.src_path
-    print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
+    #print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
     bag = rosbag.Bag(path)
     print("On Moved_RB"+path)
 
