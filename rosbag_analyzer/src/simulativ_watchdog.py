@@ -1,4 +1,5 @@
 from posixpath import dirname
+import getpass
 import datetime
 import sys, os
 import time
@@ -16,8 +17,8 @@ import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plotter
 
-
-path_rosbag = "/home/esozen1/Simulativ_Serviced/sim_result_rosbags"
+USER = getpass.getuser()
+path_rosbag = "/home/"+USER+"/Simulativ_Serviced/sim_result_rosbags"
 
 def slicer(anypath, sub):
     index = anypath.find(sub)
