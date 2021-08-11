@@ -1,8 +1,8 @@
 FROM python:3
 
 COPY requirements.txt /
-RUN pip install --extra-index-url https://rospypi.github.io/simple/ rospy rosbag
-RUN pip install watchdog
+RUN pip3 install --extra-index-url https://rospypi.github.io/simple/ rospy rosbag
+RUN pip3 install watchdog
 RUN python3 -m pip install -r requirements.txt
 
 
