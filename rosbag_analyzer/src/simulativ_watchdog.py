@@ -7,7 +7,6 @@ import json
 import logging
 import rosbag
 import numpy as np
-#from types import DynamicClassAttribute
 from watchdog import observers
 from watchdog.observers import Observer
 from watchdog.events import LoggingEventHandler, PatternMatchingEventHandler, FileSystemEventHandler
@@ -60,18 +59,12 @@ def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
     save_graph_here = make_folder(uc,var,date_time)
     print("Created Folder: " + save_graph_here)
     bag = rosbag.Bag(ros_bag_path)
-    #print(bag.get_type_and_topic_info()[1])
 
     if type_of_graph =="lonlat":
         y_axis_of_graph = []
         time_axis_of_graph =[]
         for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
-            #y_axis_of_graph.append(msg.PosnLgt)
-            #time_axis_of_graph.append(msg.PosnLat)
             print(msg)
-        #print("Fixed Graph: "+ type_of_graph)
-        #plotter.plot(time_axis_of_graph,y_axis_of_graph)
-        #plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
     
     elif type_of_graph == "speed_variance":
         y_axis_of_graph = []
@@ -186,20 +179,19 @@ def on_created_rb(event):
     historicalSize = -1
     while (historicalSize != os.path.getsize(path)):
         historicalSize = os.path.getsize(path)
-        print("we are in the loop")
-        time.sleep(10)
+        print("Processing...")
+        time.sleep(3)
     
     sim_result_graphlist = []
     path_rosbag = event.src_path
-    #print(f"hey, {event.src_path} has been created!")
     if str(path_rosbag).__contains__('UC'):
         print("ROSBAG Uploaded for a Use Case")
         print("Checking Metadata File")
         UC = check_uc(path_rosbag)
         TS = check_ts(path_rosbag)
-        if os.path.isfile("/home/"+username+"/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json"):
+        if os.path.isfile("/home/"+username+"/Simulativ_Serviced/rosbag_analyzer/src/uc_ts_metadata.json"):
             print("Metadata file exists, Checking Validation Result")
-            meta_file = open("/home/"+username+"/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json")
+            meta_file = open("/home/"+username+"/Simulativ_Serviced/rosbag_analyzer/src/uc_ts_metadata.json")
             meta_json = json.load(meta_file)
             for i in meta_json['Use_Cases']:
                 if i['UC'] == UC:
@@ -207,7 +199,6 @@ def on_created_rb(event):
                     for item in metrics.items():
                         print(str(item))
                         sim_result_graphlist.append(item)
-                        #sim_result_metric_values.append(value)
                 else:
                     print("UC not Found in Metadata")
             for key, value in sim_result_graphlist:
@@ -221,27 +212,26 @@ def on_created_rb(event):
 
 def on_deleted_rb(event):
     path = event.src_path
-    #print(f"{event.src_path} is deleted!")
 
 def on_modified_rb(event):
     path = event.src_path
     historicalSize = -1
     while (historicalSize != os.path.getsize(path)):
         historicalSize = os.path.getsize(path)
-        print("we are in the loop")
-        time.sleep(10)
+        print("Processing...")
+        time.sleep(3)
     
     sim_result_graphlist = []
     path_rosbag = event.src_path
-    #print(f"hey, {event.src_path} has been created!")
+
     if str(path_rosbag).__contains__('UC'):
         print("ROSBAG Uploaded for a Use Case")
         print("Checking Metadata File")
         UC = check_uc(path_rosbag)
         TS = check_ts(path_rosbag)
-        if os.path.isfile("/home/"+username+"/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json"):
+        if os.path.isfile("/home/"+username+"/Simulativ_Serviced/rosbag_analyzer/src/uc_ts_metadata.json"):
             print("Metadata file exists, Checking Validation Result")
-            meta_file = open("/home/"+username+"/Simulativ_Serviced/rosbag_analyzer/src/metadata_json_v2.json")
+            meta_file = open("/home/"+username+"/Simulativ_Serviced/rosbag_analyzer/src/uc_ts_metadata.json")
             meta_json = json.load(meta_file)
             for i in meta_json['Use_Cases']:
                 if i['UC'] == UC:
@@ -249,7 +239,7 @@ def on_modified_rb(event):
                     for item in metrics.items():
                         print(str(item))
                         sim_result_graphlist.append(item)
-                        #sim_result_metric_values.append(value)
+
                 else:
                     print("UC not Found in Metadata")
             for key, value in sim_result_graphlist:
@@ -263,7 +253,6 @@ def on_modified_rb(event):
 
 def on_moved_rb(event):
     path = event.src_path
-    #print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
     bag = rosbag.Bag(path)
     print("On Moved_RB"+path)
 
@@ -278,7 +267,6 @@ if __name__ == "__main__":
     #Every sim ouput to put here: 01.232.4.5. 
     
     pattern_rb = ["*.bag"]
-    #pattern_json = ["*.txt"]
     
     custom_event_handler_rb = PatternMatchingEventHandler(pattern_rb, ignore_patterns, ignore_directories = True)
 
@@ -287,23 +275,12 @@ if __name__ == "__main__":
     custom_event_handler_rb.on_modified = on_modified_rb
     custom_event_handler_rb.on_moved = on_moved_rb
 
-    #custom_event_handler_json = PatternMatchingEventHandler(pattern_json, ignore_patterns, ignore_directories = True)
-
-    #custom_event_handler_json.on_modified = on_modified_json
-    #custom_event_handler_json.on_moved = on_moved_json
-    #custom_event_handler_json.on_deleted = on_deleted_json
-    #custom_event_handler_json.on_created = on_created_json
-
     observer1 = Observer()
-    observer2 = Observer()
     observer1.schedule(custom_event_handler_rb, path_rosbag, recursive=False)
-    #observer2.schedule(custom_event_handler_json, path_json, recursive=False)
     observer1.start()
-    observer2.start()
 
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         observer1.stop()
-        #observer2.stop()

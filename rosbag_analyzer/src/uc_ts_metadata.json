@@ -1,0 +1,1405 @@
+{
+  "Use_Cases": [
+    {
+      "UC": "001",
+      "Description": "Ego Travelling on a Single Lane With Constant Target Speed",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "speed_variance": 0.02,
+        "lane_overshoot": 0.1
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": ""
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": ""
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": ""
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": -10,
+          "traffic_objects": [
+            {
+              "speed": ""
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 30,
+          "ego_acceleration": 0,
+          "road_slope": 10,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "002",
+      "Description": "Ego Following a Slower Leading Vehicle",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "following_distance": "",
+        "lane_overshoot": 0.1,
+        "av_deceleration": 1
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "20"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 60,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 60,
+          "ego_acceleration": 1,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "006",
+          "ego_speed": 30,
+          "ego_acceleration": 0.2,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "20"
+            }
+          ]
+        },
+        {
+          "TS": "007",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": -10,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "003",
+      "Description": "Ego Traveling Along a Offsetted Vehicle",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "ofsetting_distance": 5,
+        "lane_overshoot": 0.1,
+        "av_deceleration": 1,
+	      "offset_of_ego" : 0.2
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 60,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 60,
+          "ego_acceleration": 1,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "006",
+          "ego_speed": 30,
+          "ego_acceleration": 0.2,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "20"
+            }
+          ]
+        },
+        {
+          "TS": "007",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": -10,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "004",
+      "Description": "Ego Stopping Behind a Stationary Vehicle ",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "stopping_distance": 5,
+        "lane_overshoot": 0.1,
+        "av_deceleration": 1
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 60,
+          "ego_acceleration": 1,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        },
+        {
+          "TS": "006",
+          "ego_speed": 30,
+          "ego_acceleration": 0.2,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        },
+        {
+          "TS": "007",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": -10,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "005",
+      "Description": "Other Vehicle Cuts-in to Ego Vehicle's Lane from Left Lane ",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "following_distance": "",
+        "lane_overshoot": 0.1,
+        "av_deceleration": 1
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "20"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "006",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "008",
+      "Description": "Ego Vehicle Changes Lane to Left Behind a Slower Ofsetted Vehicle",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "lane_change_distance": 5,
+        "lane_overshoot": 0.1 
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "10"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "40"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 90,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 90,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "009",
+      "Description": "Ego Vehicle Changes Lane to Right Behind a Slower Ofsetted Vehicle",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "lane_change_distance": 5,
+        "lane_overshoot": 0.1 
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "10"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "40"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "010",
+      "Description": "Ego Follows a Slower Vehicle With Another Adjacent (Side) Vehicle on the Left Lane",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "following_distance": "",
+        "lane_overshoot": 0.1,
+	      "av_deceleration": 1
+
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "10"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "40"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "011",
+      "Description": "Ego Follows a Slower Vehicle With Another Adjacent Vehicle (Rear) on the Left Lane",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "following_distance": "",
+        "lane_overshoot": 0.1 
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "10"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "40"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "012",
+      "Description": "Prevention of Lane Change to Left",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "following_distance": "",
+        "lane_overshoot": 0.1,
+	      "av_deceleration": 1
+
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "20"
+            },
+            {
+              "speed": "40"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            },
+            {
+              "speed": "70"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            },
+            {
+              "speed": "100"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            },
+            {
+              "speed": "115"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            },
+            {
+              "speed": "130"
+            }
+          ]
+        },
+        {
+          "TS": "006",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            },
+            {
+              "speed": "100"
+            }
+          ]
+        },
+        {
+          "TS": "007",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            },
+            {
+              "speed": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "013",
+      "Description": "Prevention of Lane Change to Right",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "following_distance": "",
+        "lane_overshoot": 0.1,
+	      "av_deceleration": 1
+
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "10"
+            },
+            {
+              "speed": "40"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "40"
+            },
+            {
+              "speed": "70"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            },
+            {
+              "speed": "100"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            },
+            {
+              "speed": "115"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            },
+            {
+              "speed": "130"
+            }
+          ]
+        },
+        {
+          "TS": "006",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            },
+            {
+              "speed": "100"
+            }
+          ]
+        },
+        {
+          "TS": "007",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            },
+            {
+              "speed": "100"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "049",
+      "Description": "Ego Travelling on a Curved Road",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "speed_variance": 0.02,
+        "lane_overshoot": 0.1
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": ""
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": ""
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": ""
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": ""
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 30,
+          "ego_acceleration": 0,
+          "road_slope": 10,
+          "traffic_objects": [
+            {
+              "speed": ""
+            }
+          ]
+        },
+        {
+          "TS": "006",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": -10,
+          "traffic_objects": [
+            {
+              "speed": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "050",
+      "Description": "Ego Following a Slower Leading Vehicle on a Curved Road",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "following_distance": "",
+        "lane_overshoot": 0.1,
+        "av_deceleration": 1
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "20"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 90,
+          "ego_acceleration": 1,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "052",
+      "Description": "Other Vehicle Cuts-in to Ego Vehicle's Lane from Right Lane ",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "following_distance": "",
+        "lane_overshoot": 0.1,
+        "av_deceleration": 1
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "20"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "006",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "054",
+      "Description": "Other Vehicle Cuts-in to Ego Vehicle's Lane from Left Lane ",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "following_distance": "",
+        "lane_overshoot": 0.1,
+        "av_deceleration": 1
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "20"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "50"
+            }
+          ]
+        },
+        {
+          "TS": "006",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "80"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "063",
+      "Description": "Ego Vehicle Approaches Traffic Jam On All Lanes ",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "stopping_distance": "5",
+        "lane_overshoot": 0.1,
+        "av_deceleration": 1
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 90,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "5"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 90,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "064",
+      "Description": "Ego Vehicle Approaches Traffic Jam On All Lanes Except Current Lane",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "av_jam_speed": "20",
+        "lane_overshoot": 0.1,
+        "av_deceleration": 1
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "0"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 90,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "5"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 90,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "UC": "074",
+      "Description": "Ego Overtakes Leading Slower Vehicle ",
+      "HD_Map": "map_high_priority_ucs_loop_inc.rd5",
+      "Metrics": {
+        "lane_change_distance": 5,
+        "lane_overshoot": 0.1
+      },
+      "Variants": [
+        {
+          "TS": "001",
+          "ego_speed": 30,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "10"
+            }
+          ]
+        },
+        {
+          "TS": "002",
+          "ego_speed": 60,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "40"
+            }
+          ]
+        },
+        {
+          "TS": "003",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            }
+          ]
+        },
+        {
+          "TS": "004",
+          "ego_speed": 60,
+          "ego_acceleration": 0.5,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "40"
+            }
+          ]
+        },
+        {
+          "TS": "005",
+          "ego_speed": 60,
+          "ego_acceleration": 1,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "40"
+            }
+          ]
+        },
+        {
+          "TS": "006",
+          "ego_speed": 30,
+          "ego_acceleration": 0.2,
+          "road_slope": 0,
+          "traffic_objects": [
+            {
+              "speed": "10"
+            }
+          ]
+        },
+        {
+          "TS": "007",
+          "ego_speed": 90,
+          "ego_acceleration": 0,
+          "road_slope": -10,
+          "traffic_objects": [
+            {
+              "speed": "70"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+       
