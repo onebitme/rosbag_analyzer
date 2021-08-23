@@ -19,6 +19,13 @@ username= getpass.getuser()
 username = "esozen1"
 path_rosbag = "/home/"+username+"/Simulativ_Serviced/sim_result_rosbags"
 
+#TODO: temporary declaration for LO calculation
+lane_width = 3.5
+lane_overshoot = lane_width/10
+
+#temporary declaration for Lane Change Distance Calculation
+#lane_change_distance_msg needs to be smaller than following distance msg
+
 def slicer(anypath, sub):
     index = anypath.find(sub)
     if index != -1:
@@ -52,8 +59,6 @@ def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
     #TODO: No Time Messages in '/validation_metrics' tab
     #TODO: implement value check
     print(limit_of_metric)
-    if limit_of_metric == "":
-        limit_of_metric = 0
     x = datetime.datetime.now()
     date_time = '{:%d-%m-%Y}'.format(x)
     save_graph_here = make_folder(uc,var,date_time)
@@ -76,7 +81,7 @@ def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
         
         for i in range(len(y_axis_of_graph)):
             val_check = y_axis_of_graph[i]
-            if val_check > limit_of_metric:
+            if val_check >= limit_of_metric:
                 exceed_values.append(y_axis_of_graph[i])
             else:
                 exceed_values.append(np.nan)
@@ -141,10 +146,9 @@ def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
 
         for i in range(len(exceed_values)):
             val_check = exceed_values[i]
-            if val_check < limit_of_metric:
-                exceed_values[i] = y_axis_of_graph[i]
-            else:
-                exceed_values[i] = np.nan
+            if val_check > y_axis_of_graph[i]:
+                exceed_values[i] = np.nan    
+
             
         time_axis_of_graph = list(range(len(y_axis_of_graph)))
         plotter.plot(time_axis_of_graph,y_axis_of_graph, label=type_of_graph)
@@ -171,7 +175,29 @@ def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
         print("Criteria: " + type_of_graph)        
     
     
-    elif type_of_graph == "lanech":
+    elif type_of_graph == "lane_change_distance":
+        y_axis_of_graph = []
+        time_axis_of_graph =[]
+        exceed_values = []
+        for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
+            y_axis_of_graph.append(msg.following_distance)
+            print("Lane Change Distance: " + str(msg.lane_change_distance) + "  vs  " + str(msg.following_distance))
+            exceed_values.append(msg.lane_change_distance)
+
+        for i in range(len(exceed_values)):
+            val_check = exceed_values[i]
+            if val_check == 0:
+                exceed_values[i] = np.nan
+            elif val_check < y_axis_of_graph[i]:
+                exceed_values[i] = np.nan    
+            
+        time_axis_of_graph = list(range(len(y_axis_of_graph)))
+        plotter.plot(time_axis_of_graph,y_axis_of_graph, label=type_of_graph)
+        plotter.plot(time_axis_of_graph, exceed_values,'ro', label="exceeding "+ type_of_graph)
+        plotter.legend()
+        plotter.savefig(save_graph_here+"/"+type_of_graph+".svg")
+        plotter.clf()
+        print("Criteria: " + type_of_graph)
         print("Criteria: " + type_of_graph)
     
 def on_created_rb(event):
@@ -195,12 +221,15 @@ def on_created_rb(event):
             meta_json = json.load(meta_file)
             for i in meta_json['Use_Cases']:
                 if i['UC'] == UC:
+                    print(UC + " I can find this in metadata")
                     metrics = i['Metrics']
                     for item in metrics.items():
                         print(str(item))
                         sim_result_graphlist.append(item)
+                    break
                 else:
-                    print("UC not Found in Metadata")
+                    print(UC + " Not yet the desired UC or cant find the UC")
+                    #print("UC not Found in Metadata")
             for key, value in sim_result_graphlist:
                 graph_it(UC, TS, key, value ,path_rosbag)
 
@@ -241,6 +270,7 @@ def on_modified_rb(event):
                         sim_result_graphlist.append(item)
 
                 else:
+                    print(UC)
                     print("UC not Found in Metadata")
             for key, value in sim_result_graphlist:
                 graph_it(UC, TS, key, value ,path_rosbag)
