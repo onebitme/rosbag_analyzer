@@ -159,20 +159,29 @@ def graph_it(uc, var, type_of_graph, limit_of_metric, ros_bag_path):
         print("Criteria: " + type_of_graph)
     
     
-    elif type_of_graph == "stpdst":
+    elif type_of_graph == "stopping_distance":
+        y_axis_of_graph = []
+        time_axis_of_graph =[]
+        exceed_values = []
+        for topic,msg,t  in bag.read_messages(topics=['/validation_metrics']):
+            y_axis_of_graph.append(msg.stopping_distance)
+        
+        for i in range(len(y_axis_of_graph)):
+            val_check = y_axis_of_graph[i]
+            if abs(val_check) > limit_of_metric:
+                exceed_values.append(y_axis_of_graph[i])
+            else:
+                exceed_values.append(np.nan)
+
         print("Criteria: " + type_of_graph)
     
+    #TODO: Currently no implementation of offset_of_ego
+    #elif type_of_graph == "offset_of_ego":
+    #    print("Criteria: " + type_of_graph)
     
-    elif type_of_graph == "avacc":
-        print("Criteria: " + type_of_graph)
-    
-    
-    elif type_of_graph == "offego":
-        print("Criteria: " + type_of_graph)
-    
-    
-    elif type_of_graph == "offstr":
-        print("Criteria: " + type_of_graph)        
+    #TODO: Offset Start is not implemented
+    #elif type_of_graph == "offstr":
+    #    print("Criteria: " + type_of_graph)        
     
     
     elif type_of_graph == "lane_change_distance":
