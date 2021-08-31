@@ -1,4 +1,4 @@
-# Simulation .Bags Grapher
+# Simulation *.bags* Grapher
 This software is a magical rosbag reader & grapher. When it grows up, it will be functioning as a hard-working microservice to analyze all rosbag outputs of the people who run simulation.
 ## How to install
 Pre-requisites: 
